@@ -95,6 +95,7 @@ const install = () => {
   return (
     <MainContainer>
       <div className="infoblock">
+        {"adsfafasf"}
         <span>{title}</span>
       </div>
     </MainContainer>
