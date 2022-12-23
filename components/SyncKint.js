@@ -12,7 +12,7 @@ const SyncKint = ({ fields, id }) => {
       </div>
     );
   }
-  console.log(fields);
+
   const fetchData = async (data) => {
     setLoad(true);
     let postData = {};

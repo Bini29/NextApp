@@ -23,26 +23,30 @@ const getFields = async (deal) => {
   if (deal.placement !== "CRM_DEAL_DETAIL_TAB") {
     return null;
   }
-  await getDataBx("crm.deal.get", deal.options).then((data) => {
-    currentdeal = data;
-    console.log(data);
-    currentData.comment = data.COMMENTS ? data.COMMENTS : null;
-    currentData.link = data.UF_CRM_MY_LINK_FIRST
-      ? data.UF_CRM_MY_LINK_FIRST
-      : null;
-    currentData.dateFirst = data.UF_CRM_MY_DATE_FIRST;
-    currentData.dateLast = data.UF_CRM_MY_DATE_LAST;
-  });
-  await getDataBx("crm.company.get", { id: currentdeal.COMPANY_ID }).then(
-    (data) => {
+  await getDataBx("crm.deal.get", deal.options)
+    .then((data) => {
+      currentdeal = data;
+      console.log(data);
+      currentData.comment = data.COMMENTS ? data.COMMENTS : null;
+      currentData.link = data.UF_CRM_MY_LINK_FIRST
+        ? data.UF_CRM_MY_LINK_FIRST
+        : ((currentData.error = true), null);
+      currentData.dateFirst = data.UF_CRM_MY_DATE_FIRST
+        ? data.UF_CRM_MY_DATE_FIRST
+        : ((currentData.error = true), null);
+      currentData.dateLast = data.UF_CRM_MY_DATE_LAST;
+    })
+    .catch(() => {});
+  await getDataBx("crm.company.get", { id: currentdeal.COMPANY_ID })
+    .then((data) => {
       if (data) {
         currentData.companyInfo.name = data.TITLE;
         currentData.companyInfo.id = data.ID;
       } else {
         currentData.companyInfo.name = null;
       }
-    }
-  );
+    })
+    .catch(() => {});
 
   if (currentData.companyInfo.id) {
     await getDataBx("crm.requisite.list", {

@@ -14,77 +14,89 @@ const install = () => {
             console.log("Инициализация завершена!", BX24.isAdmin());
             let str = window.location.href;
             console.log(str);
+            console.log(str.replace("install", ""));
             setTitle("Выполняется установка");
+            let installApp = false;
+            await getDataBx("placement.get").then((res) => {
+              console.log(res);
+              res.forEach((element) => {
+                if (
+                  element.title === "Битрикс24 с Кинт: Управление санаторием"
+                ) {
+                  installApp = true;
+                }
+              });
+            });
+            if (!installApp) {
+              let data = {
+                PLACEMENT: "CRM_DEAL_DETAIL_TAB",
+                HANDLER: str.replace("install", ""),
+                TITLE: "Битрикс24 с Кинт: Управление санаторием",
+              };
 
-            let data = {
-              PLACEMENT: "CRM_DEAL_DETAIL_TAB",
-              HANDLER: str.replace("install", ""),
-              TITLE: "Битрикс24 с Кинт: Управление санаторием",
-            };
-
-            await getDataBx("crm.deal.userfield.add", {
-              fields: {
-                FIELD_NAME: "MY_DATE_FIRST",
-                EDIT_FORM_LABEL: "Дата заезда",
-                LIST_COLUMN_LABEL: "Дата заезда",
-                USER_TYPE_ID: "date",
-                XML_ID: "MY_DATE_FIRST",
-                SHOW_IN_LIST: true,
-                MANDATORY: true,
-              },
-            }).then((data) => {
-              console.log("Gjkt");
-              setTitle("Создание поля завершено");
-            });
-            await getDataBx("crm.deal.userfield.add", {
-              fields: {
-                FIELD_NAME: "MY_DATE_LAST",
-                EDIT_FORM_LABEL: "Дата выезда",
-                LIST_COLUMN_LABEL: "Дата выезда",
-                USER_TYPE_ID: "date",
-                XML_ID: "MY_DATE_LAST",
-                SHOW_IN_LIST: true,
-                MANDATORY: true,
-              },
-            }).then((data) => {
-              console.log("Gjkt");
-              setTitle("Создание поля завершено");
-            });
-            await getDataBx("crm.deal.userfield.add", {
-              fields: {
-                FIELD_NAME: "MY_LINK_FIRST",
-                EDIT_FORM_LABEL: "Ссылка",
-                LIST_COLUMN_LABEL: "Ссылка",
-                USER_TYPE_ID: "url",
-                XML_ID: "MY_LINK_FIRST",
-                SHOW_IN_LIST: true,
-              },
-            }).then((data) => {
-              console.log("Gjkt");
-              setTitle("Создание поля завершено");
-            });
-            await getDataBx("crm.deal.userfield.add", {
-              fields: {
-                FIELD_NAME: "MY_LINK_LAST",
-                EDIT_FORM_LABEL: "Ссылка без форматирования",
-                LIST_COLUMN_LABEL: "Ссылка без форматирования",
-                USER_TYPE_ID: "url",
-                XML_ID: "MY_LINK_LAST",
-                SHOW_IN_LIST: true,
-              },
-            }).then((data) => {
-              console.log("Gjkt");
-              setTitle("Создание поля завершено");
-            });
-            await getDataBx("placement.bind", data).then((data) => {
-              setTitle(
-                "Установка завершена, перейдите в сделки для дальнейшей работы"
-              );
-            });
-            await BX24.installFinish();
-            // setTimeout(() => {
-            //   BX24.installFinish();
-            // }, 5000);
+              await getDataBx("crm.deal.userfield.add", {
+                fields: {
+                  FIELD_NAME: "MY_DATE_FIRST",
+                  EDIT_FORM_LABEL: "Дата заезда",
+                  LIST_COLUMN_LABEL: "Дата заезда",
+                  USER_TYPE_ID: "date",
+                  XML_ID: "MY_DATE_FIRST",
+                  SHOW_IN_LIST: true,
+                  MANDATORY: true,
+                },
+              }).then((data) => {
+                console.log("Gjkt");
+                setTitle("Создание поля завершено");
+              });
+              await getDataBx("crm.deal.userfield.add", {
+                fields: {
+                  FIELD_NAME: "MY_DATE_LAST",
+                  EDIT_FORM_LABEL: "Дата выезда",
+                  LIST_COLUMN_LABEL: "Дата выезда",
+                  USER_TYPE_ID: "date",
+                  XML_ID: "MY_DATE_LAST",
+                  SHOW_IN_LIST: true,
+                  MANDATORY: true,
+                },
+              }).then((data) => {
+                console.log("Gjkt");
+                setTitle("Создание поля завершено");
+              });
+              await getDataBx("crm.deal.userfield.add", {
+                fields: {
+                  FIELD_NAME: "MY_LINK_FIRST",
+                  EDIT_FORM_LABEL: "Ссылка",
+                  LIST_COLUMN_LABEL: "Ссылка",
+                  USER_TYPE_ID: "url",
+                  XML_ID: "MY_LINK_FIRST",
+                  SHOW_IN_LIST: true,
+                },
+              }).then((data) => {
+                console.log("Gjkt");
+                setTitle("Создание поля завершено");
+              });
+              await getDataBx("crm.deal.userfield.add", {
+                fields: {
+                  FIELD_NAME: "MY_LINK_LAST",
+                  EDIT_FORM_LABEL: "Ссылка без форматирования",
+                  LIST_COLUMN_LABEL: "Ссылка без форматирования",
+                  USER_TYPE_ID: "url",
+                  XML_ID: "MY_LINK_LAST",
+                  SHOW_IN_LIST: true,
+                },
+              }).then((data) => {
+                console.log("Gjkt");
+                setTitle("Создание поля завершено");
+              });
+              await getDataBx("placement.bind", data).then((data) => {
+                setTitle(
+                  "Установка завершена, перейдите в сделки для дальнейшей работы"
+                );
+              });
+              await BX24.installFinish();
+            } else {
+              setTitle("Перейдите в сделки");
+            }
           });
         }
 
@@ -95,7 +107,6 @@ const install = () => {
   return (
     <MainContainer>
       <div className="infoblock">
-        {"adsfafasf"}
         <span>{title}</span>
       </div>
     </MainContainer>
