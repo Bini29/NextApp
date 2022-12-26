@@ -1,10 +1,12 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import { MainContainer } from "../components/MainContainer";
-import getDataBx from "../bxData/getDataBx";
+import { MainContainer } from "../../components/MainContainer";
+import getDataBx from "../../bxData/getDataBx";
+import { useRouter } from "next/router";
+
 const install = () => {
   const [title, setTitle] = useState("");
-
+  console.log("params");
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (BX24 !== null) {
