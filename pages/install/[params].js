@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 
 const install = () => {
   const [title, setTitle] = useState("");
+  const router = useRouter();
   console.log("params");
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -98,6 +99,7 @@ const install = () => {
               await BX24.installFinish();
             } else {
               setTitle("Перейдите в сделки");
+              router.pathname("/");
             }
           });
         }

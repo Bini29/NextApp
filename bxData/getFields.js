@@ -30,10 +30,10 @@ const getFields = async (deal) => {
       currentData.comment = data.COMMENTS ? data.COMMENTS : null;
       currentData.link = data.UF_CRM_MY_LINK_FIRST
         ? data.UF_CRM_MY_LINK_FIRST
-        : ((currentData.error = true), null);
+        : "";
       currentData.dateFirst = data.UF_CRM_MY_DATE_FIRST
         ? data.UF_CRM_MY_DATE_FIRST
-        : ((currentData.error = true), null);
+        : "";
       currentData.dateLast = data.UF_CRM_MY_DATE_LAST;
     })
     .catch(() => {});
