@@ -7,12 +7,12 @@ export const MainContainer = ({ children }) => {
     <>
       <div>
         <div>
-          {/* <Link href="/" legacyBehavior>
+          <Link href="/" legacyBehavior>
             <a>Главная</a>
           </Link>
           <Link href="/settings" legacyBehavior>
-            <a>Настройки2</a>
-          </Link> */}
+            <a>Настройки</a>
+          </Link>
         </div>
         <Script
           src="https://api.bitrix24.com/api/v1/"

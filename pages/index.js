@@ -28,8 +28,10 @@ const index = ({ data }) => {
               setLoad(true);
             });
           });
+          await getDataBx("entity.get").then((data) => {
+            console.log(data);
+          });
         }
-
         fetchData();
       }
     }

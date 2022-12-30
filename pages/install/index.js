@@ -18,6 +18,12 @@ const install = () => {
             console.log(str.replace("install", ""));
             setTitle("Выполняется установка");
             let installApp = false;
+            await getDataBx("entity.section.get", {
+              ENTITY: "kintdish",
+              SORT: { NAME: "DishesKint" },
+            }).then((data) => {
+              console.log(data);
+            });
             await getDataBx("placement.get").then((res) => {
               console.log(res);
               res.forEach((element) => {
@@ -29,6 +35,14 @@ const install = () => {
               });
             });
             if (!installApp) {
+              await getDataBx("entity.add", {
+                ENTITY: "kintdish",
+                NAME: "DishesKint",
+                ACCESS: { U1: "W" },
+              }).then((d) => {
+                console.log(d);
+              });
+
               let data = {
                 PLACEMENT: "CRM_DEAL_DETAIL_TAB",
                 HANDLER: str.replace("install", ""),

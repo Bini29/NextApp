@@ -5,10 +5,57 @@ const SyncKint = ({ fields, id }) => {
   const [state, setState] = useState({});
   const [load, setLoad] = useState(false);
   const [loadData, setLoadData] = useState(false);
+
+  const ft = async () => {
+    // getDataBx("entity.section.add", {
+    //   ENTITY: "kintdish",
+    //   NAME: "Списки ключей",
+    // }).then((d) => {
+    //   console.log(d);
+    // });
+    let user = await getDataBx("profile").then((data) => {
+      return data;
+    });
+
+    // 5 3 1
+    await getDataBx("entity.item.get", { ENTITY: "kintdish", FILTER: {} }).then(
+      (d) => {
+        let userEntity = false;
+        let curententityitem;
+        d.forEach((element) => {
+          if (element.NAME == user.ID) {
+            userEntity = true;
+            curententityitem = element;
+          }
+        });
+        if (userEntity) {
+          getDataBx("entity.item.update", {
+            ENTITY: "kintdish",
+            ID: curententityitem.ID,
+            DATE_ACTIVE_FROM: new Date(),
+            DETAIL_TEXT: "NTCN",
+            NAME: user.ID,
+          }).then((d) => {
+            console.log("Замена данных");
+          });
+        } else {
+          getDataBx("entity.item.add", {
+            ENTITY: "kintdish",
+            DATE_ACTIVE_FROM: new Date(),
+            DETAIL_TEXT: "NTCN",
+            NAME: user.ID,
+          }).then((d) => {
+            console.log("Новая строка");
+          });
+        }
+      }
+    );
+  };
   if (fields === null) {
     return (
       <div className="infoblock">
         <span>Перейдите в сделки</span>
+        <button onClick={ft}>cklick</button>
       </div>
     );
   }

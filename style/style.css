@@ -29,7 +29,7 @@
   transition: 1s;
 }
 .loadBtn {
-  cursor: not-allowed;
+  pointer-events: none;
   background-color: rgba(28, 119, 146, 0.95);
 }
 .linksucces {
@@ -47,4 +47,28 @@
 }
 .infoblock span {
   font-size: 20px;
+}
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 200px;
+  margin-top: 20px;
+}
+.form input {
+  padding: 5px;
+  width: 200px;
+}
+.form button {
+  font-size: 14px;
+  color: white;
+  background-color: rgba(47, 198, 246, 0.95);
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  font-family: "Open Sans", sans-serif;
+  cursor: pointer;
+  transition: 1s;
+  margin: 0 auto;
 }
