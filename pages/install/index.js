@@ -5,7 +5,7 @@ import getDataBx from "../../bxData/getDataBx";
 import { useRouter } from "next/router";
 const install = () => {
   const [title, setTitle] = useState("");
-
+  const [value, setValue] = useState("");
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (BX24 !== null) {
@@ -18,12 +18,6 @@ const install = () => {
             console.log(str.replace("install", ""));
             setTitle("Выполняется установка");
             let installApp = false;
-            await getDataBx("entity.section.get", {
-              ENTITY: "kintdish",
-              SORT: { NAME: "DishesKint" },
-            }).then((data) => {
-              console.log(data);
-            });
             await getDataBx("placement.get").then((res) => {
               console.log(res);
               res.forEach((element) => {
@@ -42,7 +36,21 @@ const install = () => {
               }).then((d) => {
                 console.log(d);
               });
-
+              await getDataBx("entity.add", {
+                ENTITY: "kintdishlink",
+                NAME: "DishesKintlink",
+                ACCESS: { U1: "W" },
+              }).then((d) => {
+                console.log(d);
+              });
+              getDataBx("entity.item.add", {
+                ENTITY: "kintdishlink",
+                DATE_ACTIVE_FROM: new Date(),
+                DETAIL_TEXT: "",
+                NAME: "ADMINLINK",
+              }).then((d) => {
+                console.log("Новая строка");
+              });
               let data = {
                 PLACEMENT: "CRM_DEAL_DETAIL_TAB",
                 HANDLER: str.replace("install", ""),
@@ -104,13 +112,18 @@ const install = () => {
                 setTitle("Создание поля завершено");
               });
               await getDataBx("placement.bind", data).then((data) => {
-                setTitle(
-                  "Установка завершена, перейдите в сделки для дальнейшей работы"
-                );
+                setTitle("Установка завершена");
               });
-              await BX24.installFinish();
+              await getDataBx("entity.item.get", {
+                ENTITY: "kintdishlink",
+                FILTER: { NAME: "ADMINLINK" },
+              }).then((data) => {
+                setTitle("Заполните поле");
+              });
             } else {
-              setTitle("Перейдите в сделки");
+              setTitle(
+                "Ошибка в установке, переустаногвите приложение или удалите"
+              );
             }
           });
         }
@@ -119,10 +132,46 @@ const install = () => {
       }
     }
   }, []);
+  const setLink = async () => {
+    console.log(value);
+    let admin = await getDataBx("user.admin", {});
+    if (admin) {
+      await getDataBx("entity.item.get", {
+        ENTITY: "kintdishlink",
+        FILTER: { NAME: "ADMINLINK" },
+      }).then((d) => {
+        getDataBx("entity.item.update", {
+          ENTITY: "kintdishlink",
+          ID: d[0].ID,
+          DATE_ACTIVE_FROM: new Date(),
+          DETAIL_TEXT: value,
+        })
+          .then((d) => {
+            setTitle("Ссылка успешно сохранена");
+          })
+          .catch((e) => {
+            alert(e);
+          });
+      });
+      await BX24.installFinish();
+    } else {
+      alert("Нет прав на добавление ссылки");
+    }
+  };
   return (
     <MainContainer>
-      <div className="infoblock">
-        <span>{title}</span>
+      <div className="infoblockSettings">
+        <div className="mainLinkForm">
+          <span>{title}</span>
+
+          <span>Введите ссылку на портал</span>
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+          />
+          {value ? <button onClick={setLink}>Отправить</button> : ""}
+        </div>
       </div>
     </MainContainer>
   );

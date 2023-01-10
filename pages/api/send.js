@@ -43,12 +43,12 @@ export default async function handler(req, res) {
       ID: req.body.link ? req.body.link : "",
     });
 
+    console.log(req.body);
     let config = {
       method: "post",
-      url: "https://online.kint.ru/kus_test/hs/KintAPI.hs/PostData?Method=PostBooking",
+      url: `${req.body.mainLink}PostData?Method=PostBooking`,
       headers: {
-        Authorization:
-          "Basic 0KHRgtC10L3RjNGI0LjQvdCwINCb0Y7QsdC+0LLRjCDQkNC70LXQutGB0LDQvdC00YDQvtCy0L3QsCAo0YHRg9C/0LXRgNGO0LfQtdGAKTo=",
+        Authorization: req.body.authToken,
         "Content-Type": "application/json",
       },
       data: data,
@@ -61,7 +61,6 @@ export default async function handler(req, res) {
       })
       .catch(function (error) {
         res.json(error);
-        console.log(error);
       });
   }
 }
