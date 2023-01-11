@@ -3,9 +3,13 @@ import { useEffect, useState } from "react";
 import { MainContainer } from "../../components/MainContainer";
 import getDataBx from "../../bxData/getDataBx";
 import { useRouter } from "next/router";
+import axios from "axios";
 const install = () => {
   const [title, setTitle] = useState("");
   const [value, setValue] = useState("");
+  const [done, setDone] = useState(false);
+  const [load, setLoad] = useState(false);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       if (BX24 !== null) {
@@ -29,6 +33,7 @@ const install = () => {
               });
             });
             if (!installApp) {
+              setLoad(true);
               await getDataBx("entity.add", {
                 ENTITY: "kintdish",
                 NAME: "DishesKint",
@@ -118,12 +123,31 @@ const install = () => {
                 ENTITY: "kintdishlink",
                 FILTER: { NAME: "ADMINLINK" },
               }).then((data) => {
-                setTitle("Заполните поле");
+                setTitle(
+                  "Приложение успешно установленно для продолжения введите ссылку в формате \n https://demo.kint.ru/kus_demo"
+                );
+                setDone(true);
+                setLoad(false);
               });
             } else {
-              setTitle(
-                "Ошибка в установке, переустаногвите приложение или удалите"
-              );
+              setTitle("Приложение уже установленно");
+              await getDataBx("entity.item.get", {
+                ENTITY: "kintdishlink",
+                FILTER: { NAME: "ADMINLINK" },
+              }).then((data) => {
+                console.log(data[0].DETAIL_TEXT);
+
+                if (data[0].DETAIL_TEXT) {
+                  setTitle(
+                    "Приложение успешно установленно для продолжения перейдите в сделки"
+                  );
+                } else {
+                  setTitle(
+                    "Приложение успешно установленно для продолжения введите ссылку в формате \n https://online.kint.ru/kus_test"
+                  );
+                  setDone(true);
+                }
+              });
             }
           });
         }
@@ -135,7 +159,18 @@ const install = () => {
   const setLink = async () => {
     console.log(value);
     let admin = await getDataBx("user.admin", {});
-    if (admin) {
+    let actualLink = false;
+    setLoad(true);
+    await axios
+      .get(`${value}/hs/KintAPI.hs/GetDBInfo`)
+      .then((res) => console.log(res))
+      .catch((e) => {
+        if (e.response.status === 401) {
+          actualLink = true;
+          setLoad(false);
+        }
+      });
+    if (admin && actualLink) {
       await getDataBx("entity.item.get", {
         ENTITY: "kintdishlink",
         FILTER: { NAME: "ADMINLINK" },
@@ -161,16 +196,21 @@ const install = () => {
   return (
     <MainContainer>
       <div className="infoblockSettings">
-        <div className="mainLinkForm">
-          <span>{title}</span>
-
-          <span>Введите ссылку на портал</span>
-          <input
-            type="text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-          />
-          {value ? <button onClick={setLink}>Отправить</button> : ""}
+        <div className={load ? "mainLinkForm loading" : "mainLinkForm"}>
+          <span className="settingsTitle">{title}</span>
+          {done ? (
+            <>
+              <span>Введите ссылку на портал</span>
+              <input
+                type="text"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+              />
+              {value ? <button onClick={setLink}>Отправить</button> : ""}
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </MainContainer>

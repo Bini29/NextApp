@@ -46,7 +46,7 @@ export default async function handler(req, res) {
     console.log(req.body);
     let config = {
       method: "post",
-      url: `${req.body.mainLink}PostData?Method=PostBooking`,
+      url: `${req.body.mainLink}/hs/KintAPI.hs/PostData?Method=PostBooking`,
       headers: {
         Authorization: req.body.authToken,
         "Content-Type": "application/json",

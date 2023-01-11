@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Open Sans", sans-serif;
 }
 .fields {
   padding: 20px 30px;
@@ -11,11 +12,21 @@
   gap: 10px;
   font-family: "Open Sans", sans-serif;
   width: fit-content;
+  margin: 0 auto;
 }
 .fields span {
   word-break: break-all;
 }
-
+.maindiv {
+  width: 100%;
+  height: 90vh;
+}
+.nav {
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .btn {
   width: 330px;
   font-size: 14px;
@@ -65,13 +76,25 @@
 .form {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 10px;
   max-width: 200px;
   margin-top: 20px;
+
+  box-sizing: border-box;
 }
 .form input {
-  padding: 5px;
+  padding: 10px;
   width: 200px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+.settingsPage {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
 .form button {
   font-size: 14px;
@@ -111,7 +134,7 @@
 .mainLinkForm button {
   font-size: 14px;
   color: white;
-  background-color: rgba(47, 198, 246, 0.95);
+  background-color: #2fc6f6f2;
   padding: 10px;
   width: 100%;
   border: none;
@@ -120,4 +143,39 @@
   cursor: pointer;
   transition: 1s;
   margin: 0 auto;
+}
+.settingsTitle {
+  font-size: 16px !important;
+}
+.loading {
+  position: relative;
+}
+.loading:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: no-repeat;
+  background-color: #cccccc78;
+  background-image: url("../assets/img/loader.svg");
+  background-position: center;
+}
+.brokenauth {
+  text-align: center;
+  padding: 5px;
+  border-radius: 10px;
+  background-color: rgb(255, 170, 170);
+}
+.settingsPage {
+  margin: 0 auto;
+}
+.succes {
+  text-align: center;
+  color: #31a52a;
+}
+.error {
+  text-align: center;
+  color: rgb(255, 4, 4);
 }

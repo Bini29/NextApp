@@ -4,11 +4,11 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     res.status(200);
   } else if (req.method === "POST") {
-    const { login, password } = req.body;
+    const { login, password, mainLink } = req.body;
 
     let config = {
       method: "get",
-      url: "https://online.kint.ru/kus_test/hs/KintAPI.hs/GetData?Method=GetDBInfo",
+      url: `${mainLink}/hs/KintAPI.hs/GetData?Method=GetDBInfo`,
       headers: {
         Authorization: `Basic ${Buffer.from(
           `${login}:${password ? password : ""}`

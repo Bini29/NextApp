@@ -39,7 +39,10 @@ const index = ({ data }) => {
 
   return (
     <MainContainer>
-      {load ? <SyncKint fields={dealInfo} id={id} /> : <h1>Загрузка....</h1>}
+      {load ? (
+        <SyncKint fields={dealInfo} id={id} />
+      ) : // <div className="loading maindiv"></div>
+      null}
     </MainContainer>
   );
 };

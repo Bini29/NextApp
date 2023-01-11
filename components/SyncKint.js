@@ -7,6 +7,8 @@ const SyncKint = ({ fields, id }) => {
   const [loadData, setLoadData] = useState(false);
   const [auth, setAuth] = useState("");
   const [mainLink, setMainLink] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  console.log(fields);
   if (fields === null) {
     return (
       <div className="infoblock">
@@ -16,19 +18,24 @@ const SyncKint = ({ fields, id }) => {
   }
   useEffect(() => {
     const fetch = async () => {
+      setLoad(true);
       const userId = await getDataBx("user.current", {});
       await getDataBx("entity.item.get", {
         ENTITY: "kintdish",
         FILTER: { NAME: userId.ID },
       }).then((d) => {
-        setAuth(d[0].DETAIL_TEXT);
+        if (d[0]?.DETAIL_TEXT) {
+          setAuth(d[0].DETAIL_TEXT);
+        }
       });
       await getDataBx("entity.item.get", {
         ENTITY: "kintdishlink",
         FILTER: { NAME: "ADMINLINK" },
       }).then((data) => {
+        console.log(data);
         setMainLink(data[0].DETAIL_TEXT);
       });
+      setLoad(false);
     };
 
     fetch();
@@ -54,8 +61,8 @@ const SyncKint = ({ fields, id }) => {
         ДатаВыезда: data.dateLast,
         Comment: data.comment,
         fiz: false,
-        link: data.link,
-        authLink: mainLink + auth,
+        authToken: auth,
+        mainLink: mainLink,
       };
     } else {
       postData = {
@@ -78,7 +85,7 @@ const SyncKint = ({ fields, id }) => {
         mainLink: mainLink,
       };
     }
-
+    console.log(mainLink);
     const res = await fetch("/api/send", {
       method: "POST",
       body: JSON.stringify(postData),
@@ -87,19 +94,22 @@ const SyncKint = ({ fields, id }) => {
       },
     });
     const send = await res.json();
-    console.log(send);
 
-    await getDataBx("crm.deal.update", {
-      id: id.options.ID,
-      fields: {
-        UF_CRM_MY_LINK_FIRST:
-          "https://online.kint.ru/kus_test/ru_RU/#" + send.Result.ID,
-        UF_CRM_MY_LINK_LAST: send.Result.ID,
-      },
-    }).then((data) => {
+    if (send.Success) {
+      await getDataBx("crm.deal.update", {
+        id: id.options.ID,
+        fields: {
+          UF_CRM_MY_LINK_FIRST: `${mainLink}/#` + send.Result.ID,
+          UF_CRM_MY_LINK_LAST: send.Result.ID,
+        },
+      }).then((data) => {
+        setLoad(false);
+        console.log(data);
+      });
+    } else {
+      setErrorMsg(send.Result.Error);
       setLoad(false);
-      console.log(data);
-    });
+    }
 
     setLoadData(true);
     setState(send);
@@ -107,7 +117,7 @@ const SyncKint = ({ fields, id }) => {
   };
 
   return (
-    <div className="fields loader">
+    <div className={load ? "fields loading" : "fields"}>
       <span>
         <b>ФИО клиента</b>:{" "}
         {fields.name ? (
@@ -176,10 +186,16 @@ const SyncKint = ({ fields, id }) => {
           onClick={() => fetchData(fields)}
           className={load ? "btn loadBtn" : "btn"}
         >
-          {load ? "Отправка..." : "Передать в Кинт: Управление санаторием"}
+          {load
+            ? "Отправка..."
+            : fields.link
+            ? "Изменить заявку"
+            : "Передать в Кинт: Управление санаторием"}
         </button>
       ) : (
-        "Перейдите в настройки и авторизуйтесь"
+        <span className="brokenauth">
+          Для отправки <br /> перейдите в настройки и авторизуйтесь
+        </span>
       )}
 
       {state.Success ? (
@@ -192,7 +208,11 @@ const SyncKint = ({ fields, id }) => {
         </a>
       ) : (
         <span className="ferr">
-          {loadData ? (state.Success ? "" : "Произошла ошибка") : ""}
+          {loadData
+            ? state.Success
+              ? ""
+              : "Произошла ошибка \n" + errorMsg
+            : ""}
         </span>
       )}
     </div>
