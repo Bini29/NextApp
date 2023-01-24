@@ -32,7 +32,7 @@ const SyncKint = ({ fields, id }) => {
         ENTITY: "kintdishlink",
         FILTER: { NAME: "ADMINLINK" },
       }).then((data) => {
-        console.log(data);
+        // console.log(data);
         setMainLink(data[0].DETAIL_TEXT);
       });
       setLoad(false);
@@ -44,7 +44,7 @@ const SyncKint = ({ fields, id }) => {
   const fetchData = async (data) => {
     setLoad(true);
     let postData = {};
-    console.log(data);
+    // console.log(data);
     if (data.companyInfo.name) {
       postData = {
         Client: {
@@ -85,7 +85,7 @@ const SyncKint = ({ fields, id }) => {
         mainLink: mainLink,
       };
     }
-    console.log(mainLink);
+    // console.log(mainLink);
     const res = await fetch("/api/send", {
       method: "POST",
       body: JSON.stringify(postData),
@@ -104,7 +104,7 @@ const SyncKint = ({ fields, id }) => {
         },
       }).then((data) => {
         setLoad(false);
-        console.log(data);
+        // console.log(data);
       });
     } else {
       setErrorMsg(send.Result.Error);
@@ -113,7 +113,7 @@ const SyncKint = ({ fields, id }) => {
 
     setLoadData(true);
     setState(send);
-    console.log(state.Success);
+    // console.log(state.Success);
   };
 
   return (

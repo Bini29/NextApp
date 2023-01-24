@@ -14,16 +14,16 @@ const install = () => {
     if (typeof window !== "undefined") {
       if (BX24 !== null) {
         function fetchData() {
-          console.log("НАЧАЛАСЬ УСТАНОВКА");
+          // console.log("НАЧАЛАСЬ УСТАНОВКА");
           BX24.init(async function () {
             console.log("Инициализация завершена!", BX24.isAdmin());
             let str = window.location.href;
-            console.log(str);
-            console.log(str.replace("install", ""));
+            // console.log(str);
+            // console.log(str.replace("install", ""));
             setTitle("Выполняется установка");
             let installApp = false;
             await getDataBx("placement.get").then((res) => {
-              console.log(res);
+              // console.log(res);
               res.forEach((element) => {
                 if (
                   element.title === "Битрикс24 с Кинт: Управление санаторием"
@@ -73,7 +73,6 @@ const install = () => {
                   MANDATORY: true,
                 },
               }).then((data) => {
-                console.log("Gjkt");
                 setTitle("Создание поля завершено");
               });
               await getDataBx("crm.deal.userfield.add", {
@@ -87,7 +86,6 @@ const install = () => {
                   MANDATORY: true,
                 },
               }).then((data) => {
-                console.log("Gjkt");
                 setTitle("Создание поля завершено");
               });
               await getDataBx("crm.deal.userfield.add", {
@@ -100,7 +98,6 @@ const install = () => {
                   SHOW_IN_LIST: true,
                 },
               }).then((data) => {
-                console.log("Gjkt");
                 setTitle("Создание поля завершено");
               });
               await getDataBx("crm.deal.userfield.add", {
@@ -113,7 +110,6 @@ const install = () => {
                   SHOW_IN_LIST: true,
                 },
               }).then((data) => {
-                console.log("Gjkt");
                 setTitle("Создание поля завершено");
               });
               await getDataBx("placement.bind", data).then((data) => {
@@ -124,7 +120,7 @@ const install = () => {
                 FILTER: { NAME: "ADMINLINK" },
               }).then((data) => {
                 setTitle(
-                  "Приложение успешно установленно для продолжения введите ссылку в формате \n https://demo.kint.ru/kus_demo"
+                  "Приложение успешно установленно для продолжения введите ссылку в формате \n https://online.kint.ru/kus_test"
                 );
                 setDone(true);
                 setLoad(false);
@@ -135,7 +131,7 @@ const install = () => {
                 ENTITY: "kintdishlink",
                 FILTER: { NAME: "ADMINLINK" },
               }).then((data) => {
-                console.log(data[0].DETAIL_TEXT);
+                // console.log(data[0].DETAIL_TEXT);
 
                 if (data[0].DETAIL_TEXT) {
                   setTitle(
@@ -157,7 +153,7 @@ const install = () => {
     }
   }, []);
   const setLink = async () => {
-    console.log(value);
+    // console.log(value);
     let admin = await getDataBx("user.admin", {});
     let actualLink = false;
     setLoad(true);
