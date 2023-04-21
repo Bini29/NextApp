@@ -161,10 +161,10 @@ const install = () => {
       .get(`${value}/hs/KintAPI.hs/GetDBInfo`)
       .then((res) => console.log(res))
       .catch((e) => {
-        if (e.response.status === 401) {
-          actualLink = true;
-          setLoad(false);
-        }
+        // if (e.response.status === 401) {
+        // }
+        actualLink = true;
+        setLoad(false);
       });
     if (admin && actualLink) {
       await getDataBx("entity.item.get", {
